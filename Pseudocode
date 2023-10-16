@@ -1,0 +1,104 @@
+
+# lists storing the gallons each house received
+road_1_gallons = [0, 0, 0, 0, 0]
+road_2_gallons = [0, 0, 0, 0, 0]
+road_3_gallons = [0, 0, 0, 0, 0]
+road_4_gallons = [0, 0, 0, 0, 0]
+road_5_gallons = [0, 0, 0, 0, 0]
+
+gallons_per_road = 0
+
+
+def max_water_per_road():
+    global gallons_per_road
+    # calculate the amount of water allowed per road
+    water_in_truck = int(input("Please enter the gallons of water in the truck: "))
+    gallons_per_road = water_in_truck/4
+
+
+"""
+Sets which array should be checked and returns -1 if the array number is invalid, 
+0 if no more water can be facilitated for that street, 1 if the request can be facilitated 
+and an error message if the request needs to be lower
+"""
+
+
+def water_check(road_num, house_num, gallons_request):
+    loop_control = 0
+
+    total_gallons_b4 = 0
+    total_gallons = 0
+    # Sets array to be checked returns -1 if array invalid
+    if road_num == 1:
+        arr = road_1_gallons
+    elif road_num == 2:
+        arr = road_2_gallons
+    elif road_num == 3:
+        arr = road_3_gallons
+    elif road_num == 4:
+        arr = road_4_gallons
+    else:
+        return -1
+
+    #  Checks the amount of water able to be added
+    while loop_control < len(arr):
+        total_gallons_b4 = total_gallons_b4 + arr[loop_control]
+        loop_control += 1
+    loop_control = 0
+
+    # Puts the amount requested in the array to see if it can be facilitated
+    arr[house_num - 1] = gallons_request
+
+    while loop_control < len(arr):
+        total_gallons = total_gallons + arr[loop_control]
+        loop_control += 1
+
+    if total_gallons_b4 == gallons_per_road:
+        return 0
+
+    if total_gallons > gallons_per_road:
+        error_msg = f"Your request could not be completed, please request a smaller amount.\nYou can request a maximum of {gallons_per_road} gallons"
+        return error_msg
+    else:
+        return 1
+
+
+def water_request():
+    global gallons_per_road
+
+    control_var = input("Would you like to request water? -1 will terminate: ")
+    while control_var != "-1":
+        road_num = int(input("Please input your street number (1-4)"))
+        house_num = int(input("Please input your house number (1-5) "))
+        gallons_request = int(input("How many gallons of water do you need? "))
+        if house_num > 5:
+            print("Invalid house number")
+            continue
+
+        water_check_return = water_check(road_num, house_num, gallons_request)
+
+        if water_check_return == -1:
+            print("Invalid street number")
+        elif water_check_return == 0:
+            print("Street has reached it's maximum allowed water amount")
+        elif water_check_return == 1:
+            if road_num == 1:
+                road_1_gallons[house_num-1] = gallons_request
+                print(road_1_gallons)
+            elif road_num == 2:
+                road_2_gallons[house_num-1] = gallons_request
+                print(road_2_gallons)
+            elif road_num == 3:
+                road_3_gallons[house_num-1] = gallons_request
+                print(road_3_gallons)
+            elif road_num == 4:
+                road_4_gallons[house_num-1] = gallons_request
+                print(road_4_gallons)
+        else:
+            print(water_check_return)
+        control_var = input("Would you like to request water? -1 will terminate: ")
+
+
+if __name__ == "__main__":
+    max_water_per_road()
+    water_request()
